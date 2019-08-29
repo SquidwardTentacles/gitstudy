@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue';
 Vue.prototype.axios = axios;
-axios.defaults.baseURL = 'https://api.example.com';
+axios.defaults.baseURL = 'http://api.s1.g3user.com';
 // 添加请求拦截器
 axios.interceptors.request.use(
   function(config) {

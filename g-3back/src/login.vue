@@ -20,7 +20,14 @@
     </div>
     <div class="flexbox main-box">
       <div class="login-main-box">
-        <div class="icon-box"></div>
+        <div class="icon-box">
+          <div class="icon-rel">
+            <p class="icon1"
+               ref="icon1"></p>
+            <p class="icon2"
+               ref="icon2"></p>
+          </div>
+        </div>
         <div class="tip-box">
           <p>温馨提醒：使用
             <span>谷歌浏览器</span> 登录云推广后台有惊喜！<span>检测下载</span></p>
@@ -47,11 +54,31 @@
             </el-form-item>
           </el-form>
         </div>
+        <div class="operation-box flexbox between">
+          <div class="self-motion">
+            <!-- <span>√</span> -->
+            <input type="checkbox"
+                   @change="checkboxChange"
+                   name=""
+                   id="">
+            <span>自动登录</span>
+          </div>
+          <div class="pass-operation">
+            <span>忘记密码</span>
+            <span> | </span>
+            <span>自动登录</span>
+          </div>
+        </div>
+        <div class="bottom-btn"
+             @click="loginBtn('ruleForm')">
+          登录
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import $ from 'jquery';
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -85,10 +112,17 @@ export default {
     }
   },
   mounted () {
+  },
+  created () {
     console.log(this.regObj.password, 'w');
+    this.tranformFunc()
+    // console.log($('p.icon2'), 'jq');
 
   },
   methods: {
+    tranformFunc () {
+
+    },
     // 右侧小二维码鼠标事件
     rightHiddenCode () {
       this.hiddenCodeShow = true
@@ -96,6 +130,32 @@ export default {
     // 外侧大盒子鼠标事件
     outerBoxMouse () {
       this.hiddenCodeShow = false
+    },
+    // 自动登录checkbox
+    checkboxChange (e) {
+      console.log(e.target.checked);
+    },
+    // 登录按钮点击事件
+    loginBtn (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 验证成功
+          let params = {
+            username: this.ruleForm.username,
+            password: this.ruleForm.password
+          }
+          this.axios.post('/?s=v1/g3login', params).then(res => {
+            console.log(res);
+
+          }).catch(err => {
+            console.log(err);
+
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
   },
 }
@@ -164,8 +224,64 @@ export default {
       .icon-box {
         width: 100%;
         height: 110px;
+        position: relative;
         background: url("./assets/image/login/loginxiala.png") center center
           no-repeat;
+        .icon-rel {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          margin: 15px auto;
+          p {
+            background: url("./assets/image/login/center-icon1.png") center
+              center/20px auto no-repeat;
+            height: 17px;
+            width: 50px;
+            &:nth-child(1) {
+              animation: identifier 3s infinite;
+              @keyframes identifier {
+                0% {
+                  opacity: 0.1;
+                }
+                20% {
+                  opacity: 0.3;
+                }
+                40% {
+                  opacity: 0.8;
+                }
+                50% {
+                  opacity: 1;
+                }
+                80% {
+                  opacity: 1;
+                }
+                100% {
+                  opacity: 1;
+                }
+              }
+            }
+            &:nth-child(2) {
+              background: url("./assets/image/login/center-icon2.png") center
+                center/40px auto no-repeat;
+              animation: identifier 3s infinite;
+              @keyframes identifier {
+                0% {
+                  opacity: 0.1;
+                }
+                60% {
+                  opacity: 0.6;
+                }
+                80% {
+                  opacity: 0.8;
+                }
+                100% {
+                  opacity: 1;
+                }
+              }
+            }
+          }
+        }
       }
       .tip-box {
         line-height: 30px;
@@ -181,6 +297,45 @@ export default {
             margin-left: 3px;
           }
         }
+      }
+      .operation-box {
+        font-size: 13px;
+        .self-motion {
+          line-height: 13px;
+          span {
+            vertical-align: middle;
+            display: inline-block;
+            color: #000;
+          }
+          input {
+            vertical-align: middle;
+            width: 13px;
+            height: 13px;
+            background-color: #dedede;
+            border: 1px solid #a9a9a9;
+            border-radius: 3px;
+            margin: 0;
+            margin-right: 9px;
+            box-sizing: border-box;
+          }
+        }
+        .pass-operation {
+          color: #003f96;
+        }
+      }
+      .bottom-btn {
+        // width: 360px;
+        height: 46px;
+        line-height: 46px;
+        text-align: center;
+        background: #1db7ff;
+        border-radius: 8px;
+        margin: 0 auto;
+        border: 0 none;
+        cursor: pointer;
+        color: #fff;
+        font-size: 18px;
+        margin-top: 10px;
       }
     }
   }
